@@ -8,6 +8,8 @@ from app.services.ingestion_service import IngestionService
 
 
 class FakeRepository:
+    """In-memory fake — tests IngestionService with zero database involvement."""
+
     def __init__(self):
         self.store: list[SensorReadingModel] = []
         self.should_raise: Exception | None = None
@@ -16,7 +18,6 @@ class FakeRepository:
         if self.should_raise:
             raise self.should_raise
 
-        # Simulate the unique constraint enforced by the real DB
         for existing in self.store:
             if existing.sensor_id == reading.sensor_id and existing.timestamp == reading.timestamp:
                 raise DuplicateReadingError(
@@ -39,19 +40,6 @@ class FakeRepository:
         return [r for r in self.store if r.sensor_id == sensor_id][:limit]
 
 
-def make_payload(
-    sensor_id: str = "sensor-01",
-    timestamp: datetime | None = None,
-    reading: float = 23.5,
-) -> SensorReadingIn:
-    """Helper to build valid SensorReadingIn payloads in tests."""
-    return SensorReadingIn(
-        sensor_id=sensor_id,
-        timestamp=timestamp or datetime(2024, 1, 15, 10, 30, 0, tzinfo=timezone.utc),
-        reading=reading,
-    )
-
-
 @pytest.fixture
 def repo() -> FakeRepository:
     return FakeRepository()
@@ -60,3 +48,19 @@ def repo() -> FakeRepository:
 @pytest.fixture
 def service(repo) -> IngestionService:
     return IngestionService(repo)
+
+
+@pytest.fixture
+def make_payload():
+    """Factory fixture for building valid SensorReadingIn payloads in tests."""
+    def _make(
+        sensor_id: str = "sensor-01",
+        timestamp: datetime | None = None,
+        reading: float = 23.5,
+    ) -> SensorReadingIn:
+        return SensorReadingIn(
+            sensor_id=sensor_id,
+            timestamp=timestamp or datetime(2024, 1, 15, 10, 30, 0, tzinfo=timezone.utc),
+            reading=reading,
+        )
+    return _make

@@ -1,5 +1,4 @@
-from datetime import datetime, timezone
-from typing import Protocol, runtime_checkable
+from typing import Protocol
 
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -9,7 +8,6 @@ from app.domain.exceptions import DuplicateReadingError, ReadingPersistenceError
 from app.db.models import SensorReadingModel
 
 
-@runtime_checkable
 class SensorReadingRepository(Protocol):
 
     def add(self, reading: SensorReading) -> SensorReadingModel: ...
@@ -17,17 +15,16 @@ class SensorReadingRepository(Protocol):
 
 
 class SqlAlchemySensorReadingRepository:
-    """Concrete SQLAlchemy implementation of SensorReadingRepository."""
 
     def __init__(self, db: Session):
         self.db = db
 
     def add(self, reading: SensorReading) -> SensorReadingModel:
+        # received_at is set automatically by the model default
         model = SensorReadingModel(
             sensor_id=reading.sensor_id,
             timestamp=reading.timestamp,
             reading=reading.reading,
-            received_at=datetime.now(timezone.utc),
         )
         try:
             self.db.add(model)
