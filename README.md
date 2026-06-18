@@ -32,6 +32,7 @@ pip install -r requirements.txt
 
 ```bash
 uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
 The service starts at `http://localhost:8000`.
