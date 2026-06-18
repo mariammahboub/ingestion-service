@@ -3,14 +3,16 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-
+import asyncio
+import inspect
 from app.main import app
 from app.db.session import get_db, Base
 from app.api.dependencies import get_ingestion_service
 from app.repositories.sensor_reading_repository import SqlAlchemySensorReadingRepository
 from app.services.ingestion_service import IngestionService
 
-
+if not hasattr(asyncio, "iscoroutinefunction") or asyncio.iscoroutinefunction is inspect.iscoroutinefunction:
+    asyncio.iscoroutinefunction = inspect.iscoroutinefunction
 # In-memory database — no files, no cleanup, no risk of accidentally committing test data.
 # StaticPool is required so the in-memory DB is shared across all connections in the pool.
 TEST_DATABASE_URL = "sqlite:///:memory:"
