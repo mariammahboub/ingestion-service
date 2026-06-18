@@ -1,5 +1,4 @@
 import logging
-import app
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -11,7 +10,6 @@ logger = logging.getLogger(__name__)
 
 def register_exception_handlers(app: FastAPI) -> None:
 
-   # app/core/exception_handlers.py - Line 25
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(
