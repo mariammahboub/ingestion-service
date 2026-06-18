@@ -42,6 +42,20 @@ The service starts at `http://localhost:8000`.
 | `http://localhost:8000/redoc` | ReDoc documentation |
 | `http://localhost:8000/health` | Health check |
 
+## Continuous Integration
+
+The repository includes a GitHub Actions workflow (`.github/workflows/ci.yml`)
+that runs on every push and pull request to `main`. It performs:
+
+- Linting with **Ruff**
+- Running the full test suite with coverage reporting
+
+## Postman Collection
+
+A ready-to-use Postman collection is included
+(`ingestion-service.postman_collection.json`) covering all endpoints with
+example payloads.
+
 ### Configuration (optional)
 
 Copy `.env.example` to `.env` to override defaults. The service runs out of the
