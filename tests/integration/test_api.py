@@ -99,8 +99,8 @@ def test_list_readings_returns_200(client):
 
 def test_list_readings_returns_empty_for_unknown_sensor(client):
     response = client.get("/api/v1/readings/sensor-unknown")
-    assert response.status_code == 200
-    assert response.json() == []
+    assert response.status_code == 404
+    assert response.json()["detail"] == "No readings found for sensor 'sensor-unknown'"
 
 def test_list_readings_respects_limit(client):
     for h in range(5):

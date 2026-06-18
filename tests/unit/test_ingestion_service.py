@@ -1,6 +1,7 @@
 import pytest
 from datetime import datetime, timezone
-
+from app.services.ingestion_service import IngestionService
+from app.domain.exceptions import SensorNotFoundError
 from app.domain.exceptions import DuplicateReadingError, ReadingPersistenceError
 
 
@@ -73,7 +74,8 @@ def test_get_readings_returns_correct_sensor_results(service, make_payload):
 
 
 def test_get_readings_returns_empty_list_for_unknown_sensor(service):
-    assert service.get_readings("sensor-unknown", limit=10) == []
+    with pytest.raises(SensorNotFoundError):
+        service.get_readings("sensor-unknown", limit=10)
 
 
 def test_get_readings_respects_limit(service, make_payload):
