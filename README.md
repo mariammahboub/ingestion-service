@@ -17,7 +17,8 @@ layer without touching the rest.
 ### Installation
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/mariammahboub/ingestion-service.git
+
 cd ingestion-service
 
 python -m venv .venv
