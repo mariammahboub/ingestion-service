@@ -1,4 +1,5 @@
 import logging
+import app
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
@@ -10,30 +11,32 @@ logger = logging.getLogger(__name__)
 
 def register_exception_handlers(app: FastAPI) -> None:
 
+   # app/core/exception_handlers.py - Line 25
+
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(
-        request: Request, exc: RequestValidationError
+    request: Request, exc: RequestValidationError
     ) -> JSONResponse:
 
         logger.warning(
-            "Validation error | method=%s | path=%s | errors=%s",
-            request.method,
-            request.url.path,
-            exc.errors(),
-        )
+        "Validation error | method=%s | path=%s | errors=%s",
+        request.method,
+        request.url.path,
+        exc.errors(),
+    )
         return JSONResponse(
-            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
-            content={
-                "detail": "Request validation failed.",
-                "errors": [
-                    {
-                        "field": " -> ".join(str(loc) for loc in err["loc"]),
-                        "message": err["msg"],
-                        "type": err["type"],
-                    }
-                    for err in exc.errors()
-                ],
-            },
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,  # ← Change this
+        content={
+            "detail": "Request validation failed.",
+            "errors": [
+                {
+                    "field": " -> ".join(str(loc) for loc in err["loc"]),
+                    "message": err["msg"],
+                    "type": err["type"],
+                }
+                for err in exc.errors()
+            ],
+        },
         )
 
     @app.exception_handler(DuplicateReadingError)
