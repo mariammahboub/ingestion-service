@@ -1,6 +1,6 @@
 import logging
 from app.domain.entities import SensorReading
-from app.domain.exceptions import DuplicateReadingError, ReadingPersistenceError
+from app.domain.exceptions import DuplicateReadingError, ReadingPersistenceError, SensorNotFoundError
 from app.repositories.sensor_reading_repository import SensorReadingRepository
 from app.schemas.sensor_reading import SensorReadingIn
 
@@ -57,6 +57,8 @@ class IngestionService:
 
         try:
             results = self.repository.list_by_sensor(sensor_id, limit)
+            if not results:
+                raise SensorNotFoundError(f"No readings found for sensor '{sensor_id}'")
             logger.info("Fetched %d readings | sensor_id=%s", len(results), sensor_id)
             return results
 
