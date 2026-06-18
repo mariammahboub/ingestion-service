@@ -23,7 +23,7 @@ def register_exception_handlers(app: FastAPI) -> None:
         exc.errors(),
     )
         return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,  # ← Change this
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={
             "detail": "Request validation failed.",
             "errors": [
