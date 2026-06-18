@@ -50,7 +50,6 @@ class IngestionService:
             raise
 
     def get_readings(self, sensor_id: str, limit: int = 100):
-        
         if limit < 1 or limit > 1000:
             raise ValueError(f"limit must be between 1 and 1000, got {limit}")
 
@@ -58,9 +57,6 @@ class IngestionService:
 
         try:
             results = self.repository.list_by_sensor(sensor_id, limit)
-            if not results:
-                 raise SensorNotFoundError(f"No readings found for sensor '{sensor_id}'")
-             
             logger.info("Fetched %d readings | sensor_id=%s", len(results), sensor_id)
             return results
 
