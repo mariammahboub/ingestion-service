@@ -1,0 +1,94 @@
+{
+  "info": {
+    "name": "Ingestion Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/health"
+      }
+    },
+    {
+      "name": "POST - Create Reading (Valid)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://127.0.0.1:8000/api/v1/readings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sensor_id\": \"sensor-cairo-01\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"reading\": 23.5\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - Duplicate Reading (409)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://127.0.0.1:8000/api/v1/readings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sensor_id\": \"sensor-cairo-01\",\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"reading\": 23.5\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - Missing sensor_id (422)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://127.0.0.1:8000/api/v1/readings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"reading\": 23.5\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - Future Timestamp (422)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://127.0.0.1:8000/api/v1/readings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sensor_id\": \"sensor-cairo-01\",\n  \"timestamp\": \"2099-01-01T00:00:00Z\",\n  \"reading\": 23.5\n}"
+        }
+      }
+    },
+    {
+      "name": "POST - No Timezone (422)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "http://127.0.0.1:8000/api/v1/readings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sensor_id\": \"sensor-cairo-01\",\n  \"timestamp\": \"2024-01-15T10:30:00\",\n  \"reading\": 23.5\n}"
+        }
+      }
+    },
+    {
+      "name": "GET - List Readings",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/v1/readings/sensor-cairo-01?limit=10",
+          "host": ["http://127.0.0.1:8000"],
+          "path": ["api", "v1", "readings", "sensor-cairo-01"],
+          "query": [{ "key": "limit", "value": "10" }]
+        }
+      }
+    },
+    {
+      "name": "GET - Invalid Limit (422)",
+      "request": {
+        "method": "GET",
+        "url": "http://127.0.0.1:8000/api/v1/readings/sensor-cairo-01?limit=0"
+      }
+    }
+  ]
+}

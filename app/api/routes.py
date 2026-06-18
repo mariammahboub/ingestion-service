@@ -42,5 +42,4 @@ def list_readings(
     limit: int = Query(default=100, ge=1, le=1000, description="Max number of results to return"),
     service: IngestionService = Depends(get_ingestion_service),
 ) -> list[SensorReadingOut]:
-    """List the most recent readings for a sensor, newest first."""
     return service.get_readings(sensor_id, limit)
