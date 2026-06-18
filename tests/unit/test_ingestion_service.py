@@ -1,6 +1,5 @@
 import pytest
 from datetime import datetime, timezone
-from app.services.ingestion_service import IngestionService
 from app.domain.exceptions import SensorNotFoundError
 from app.domain.exceptions import DuplicateReadingError, ReadingPersistenceError
 
